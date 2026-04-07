@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>AutoHub Dashboard</title>
+  <title>Dashboard</title>
 
   <style>
     body {
@@ -15,7 +15,12 @@
       background: #1f2937;
       color: white;
       padding: 15px;
-      font-size: 18px;
+    }
+
+    .logout {
+      float: right;
+      cursor: pointer;
+      color: #f87171;
     }
 
     .container {
@@ -27,24 +32,12 @@
       padding: 15px;
       margin-bottom: 15px;
       border-radius: 8px;
-      box-shadow: 0 5px 10px rgba(0,0,0,0.05);
     }
 
     a {
       display: block;
-      margin-top: 5px;
       color: #2563eb;
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .logout {
-      float: right;
-      cursor: pointer;
-      color: #f87171;
+      margin-top: 5px;
     }
   </style>
 </head>
@@ -59,19 +52,20 @@
 <div class="container" id="content"></div>
 
 <script>
+// 🔐 PEGAR USUÁRIO
 const user = JSON.parse(localStorage.getItem('user'));
 const username = localStorage.getItem('username');
 
-// 🔒 BLOQUEIA SE NÃO ESTIVER LOGADO
+// 🚨 BLOQUEIO
 if (!user || !username) {
   window.location.href = '/login';
 }
 
-// 👋 Nome do usuário
+// 👋 MOSTRAR NOME
 document.getElementById('welcome').innerText =
   "Bem-vindo, " + user.nome;
 
-// 🚀 CARREGAR DASHBOARD
+// 🚀 CARREGAR DADOS
 async function loadDashboard() {
   const res = await fetch(`/dashboard?username=${username}`);
   const data = await res.json();
