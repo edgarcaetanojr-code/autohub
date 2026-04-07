@@ -52,38 +52,54 @@
 <div class="container" id="content"></div>
 
 <script>
-// 🔐 PEGAR USUÁRIO
+// 🔐 RECUPERA USUÁRIO
 const user = JSON.parse(localStorage.getItem('user'));
 const username = localStorage.getItem('username');
 
-// 🚨 BLOQUEIO
+// 🚨 SE NÃO EXISTIR → VOLTA PRO LOGIN
 if (!user || !username) {
+  alert("Sessão expirada. Faça login novamente.");
   window.location.href = '/login';
 }
 
-// 👋 MOSTRAR NOME
+// 👋 MOSTRA NOME
 document.getElementById('welcome').innerText =
   "Bem-vindo, " + user.nome;
 
-// 🚀 CARREGAR DADOS
+// 🚀 CARREGA DADOS
 async function loadDashboard() {
-  const res = await fetch(`/dashboard?username=${username}`);
-  const data = await res.json();
+  try {
+    const res = await fetch(`/dashboard?username=${username}`);
 
-  let html = '';
+    if (!res.ok) {
+      throw new Error("Erro ao carregar dashboard");
+    }
 
-  data.departamentos.forEach(dep => {
-    html += `<div class="card">`;
-    html += `<h3>${dep.nome}</h3>`;
+    const data = await res.json();
 
-    dep.links.forEach(link => {
-      html += `<a href="${link.url}" target="_blank">${link.nome}</a>`;
-    });
+    let html = '';
 
-    html += `</div>`;
-  });
+    if (!data.departamentos || data.departamentos.length === 0) {
+      html = "<p>Nenhum departamento disponível.</p>";
+    } else {
+      data.departamentos.forEach(dep => {
+        html += `<div class="card">`;
+        html += `<h3>${dep.nome}</h3>`;
 
-  document.getElementById('content').innerHTML = html;
+        dep.links.forEach(link => {
+          html += `<a href="${link.url}" target="_blank">${link.nome}</a>`;
+        });
+
+        html += `</div>`;
+      });
+    }
+
+    document.getElementById('content').innerHTML = html;
+
+  } catch (err) {
+    document.getElementById('content').innerHTML =
+      "<p>Erro ao carregar dados.</p>";
+  }
 }
 
 // 🔓 LOGOUT
