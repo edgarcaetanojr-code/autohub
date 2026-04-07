@@ -3,7 +3,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(express.static(__dirname)); // serve o index.html
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
@@ -96,3 +95,4 @@ app.get('/login', (req, res) => {
 app.get('/dashboard-page', (req, res) => {
   res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
+app.use(express.static(__dirname)); // serve o index.html
