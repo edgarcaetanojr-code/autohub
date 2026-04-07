@@ -1,43 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login - AutoHub</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: #f4f6f9;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .box {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      width: 300px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-    }
-    button {
-      background: #2563eb;
-      color: white;
-      border: none;
-    }
-  </style>
+  <title>Login</title>
 </head>
 <body>
 
-<div class="box">
-  <h2>Login</h2>
-  <input id="user" placeholder="Usuário">
-  <input id="pass" type="password" placeholder="Senha">
-  <button onclick="login()">Entrar</button>
-</div>
+<h2>Login</h2>
+<input id="user" placeholder="Usuário">
+<input id="pass" type="password" placeholder="Senha">
+<button onclick="login()">Entrar</button>
 
 <script>
 async function login() {
@@ -53,7 +24,7 @@ async function login() {
   if (res.ok) {
     const data = await res.json();
     localStorage.setItem('user', JSON.stringify(data.user));
-  window.location.href = '/dashboard-page';
+    window.location.href = '/dashboard-page';
   } else {
     alert('Login inválido');
   }
