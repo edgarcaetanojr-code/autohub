@@ -13,12 +13,6 @@ const users = [
     password: "1234",
     nome: "Edgar Caetano",
     empresa: "Concessionária A"
-  },
-  {
-    username: "joao.silva",
-    password: "1234",
-    nome: "João Silva",
-    empresa: "Concessionária A"
   }
 ];
 
@@ -28,20 +22,13 @@ const data = {
     {
       nome: "Veículos",
       links: [
-        { nome: "Portal VW", url: "https://www.portalredevw.com.br/" },
-        { nome: "Tabela FIPE", url: "https://veiculos.fipe.org.br/" }
-      ]
-    },
-    {
-      nome: "Financeiro",
-      links: [
-        { nome: "Banco VW", url: "https://digital.bancovw.com.br/" }
+        { nome: "Portal VW", url: "https://www.portalredevw.com.br/" }
       ]
     }
   ]
 };
 
-// ===== ROTAS DE PÁGINA =====
+// ===== ROTAS =====
 app.get('/', (req, res) => {
   res.redirect('/login');
 });
@@ -63,14 +50,7 @@ app.post('/login', (req, res) => {
   );
 
   if (user) {
-    res.json({
-      success: true,
-      user: {
-        username: user.username,
-        nome: user.nome,
-        empresa: user.empresa
-      }
-    });
+    res.json({ success: true, user });
   } else {
     res.status(401).json({ success: false });
   }
@@ -81,7 +61,7 @@ app.get('/dashboard', (req, res) => {
   res.json(data);
 });
 
-// ===== ARQUIVOS ESTÁTICOS (sempre por último) =====
+// ===== STATIC =====
 app.use(express.static(__dirname));
 
 // ===== START =====
