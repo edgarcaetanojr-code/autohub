@@ -46,6 +46,26 @@ const data = {
 // LOGIN
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
+
+  const user = users.find(
+    u => u.username === username && u.password === password
+  );
+
+  if (user) {
+    res.json({
+      success: true,
+      user: {
+        username: user.username,
+        nome: user.nome,
+        empresa: user.empresa
+      }
+    });
+  } else {
+    res.status(401).json({ success: false });
+  }
+});
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
   const user = users.find(u => u.username === username && u.password === password);
 
   if (user) {
