@@ -44,22 +44,19 @@ const data = {
 
 // ROTAS
 
-// raiz → login
 app.get('/', (req, res) => {
   res.redirect('/login');
 });
 
-// página login
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'login.html'));
 });
 
-// página dashboard
 app.get('/dashboard-page', (req, res) => {
   res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
-// login API
+// LOGIN API
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
@@ -71,4 +68,22 @@ app.post('/login', (req, res) => {
     res.json({
       success: true,
       user: {
-        username
+        username: user.username,
+        nome: user.nome,
+        empresa: user.empresa
+      }
+    });
+  } else {
+    res.status(401).json({ success: false });
+  }
+});
+
+// DASHBOARD API
+app.get('/dashboard', (req, res) => {
+  res.json(data);
+});
+
+// START
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
