@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AutoHub MVP</title>
+</head>
+<body>
+
+<h2>Login</h2>
+<input id="user" placeholder="Usuário"><br>
+<input id="pass" type="password" placeholder="Senha"><br>
+<button onclick="login()">Entrar</button>
+
+<div id="dashboard" style="display:none;">
+  <h2>Dashboard</h2>
+  <div id="content"></div>
+</div>
+
+<script>
+async function login() {
+  const username = document.getElementById('user').value;
+  const password = document.getElementById('pass').value;
+
+  const res = await fetch('/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  });
+
+  if (res.ok) {
+    loadDashboard();
+  } else {
+    alert('Login inválido');
+  }
+}
+
+async function loadDashboard() {
+  document.getElementById('dashboard').style.display = 'block';
+
+  const res = await fetch('/dashboard');
+  const data = await res.json();
+
+  let html = '';
+
+  data.departamentos.forEach(dep => {
+    html += `<h3>${dep.nome}</h3>`;
+    dep.links.forEach(link => {
+      html += `<a href="${link.url}" target="_blank">${link.nome}</a><br>`;
+    });
+  });
+
+  document.getElementById('content').innerHTML = html;
+}
+</script>
+
+</body>
+</html>
