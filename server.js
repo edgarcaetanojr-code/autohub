@@ -10,7 +10,18 @@ app.get('/', (req, res) => {
 });
 // LOGIN MOCK
 const users = [
-  { username: "edgar.caetano", password: "1234" }
+  {
+    username: "edgar.caetano",
+    password: "1234",
+    nome: "Edgar Caetano",
+    empresa: "Concessionária A"
+  },
+  {
+    username: "joao.silva",
+    password: "1234",
+    nome: "João Silva",
+    empresa: "Concessionária A"
+  }
 ];
 
 // DADOS MOCK
