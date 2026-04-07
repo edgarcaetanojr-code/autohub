@@ -1,13 +1,12 @@
 const express = require('express');
+const path = require('path');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
-// LOGIN MOCK
+// ===== USUÁRIOS =====
 const users = [
   {
     username: "edgar.caetano",
@@ -23,7 +22,7 @@ const users = [
   }
 ];
 
-// DADOS MOCK
+// ===== DADOS =====
 const data = {
   departamentos: [
     {
@@ -42,7 +41,20 @@ const data = {
   ]
 };
 
-// LOGIN
+// ===== ROTAS DE PÁGINA =====
+app.get('/', (req, res) => {
+  res.redirect('/login');
+});
+
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'login.html'));
+});
+
+app.get('/dashboard-page', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dashboard.html'));
+});
+
+// ===== LOGIN =====
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
@@ -63,36 +75,16 @@ app.post('/login', (req, res) => {
     res.status(401).json({ success: false });
   }
 });
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  const user = users.find(u => u.username === username && u.password === password);
 
-  if (user) {
-    res.json({ success: true });
-  } else {
-    res.status(401).json({ success: false });
-  }
-});
-
-// DASHBOARD
+// ===== DASHBOARD =====
 app.get('/dashboard', (req, res) => {
   res.json(data);
 });
 
+// ===== ARQUIVOS ESTÁTICOS (sempre por último) =====
+app.use(express.static(__dirname));
+
+// ===== START =====
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
-const path = require('path');
-
-app.get('/', (req, res) => {
-  res.redirect('/login');
-});
-
-app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'login.html'));
-});
-
-app.get('/dashboard-page', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dashboard.html'));
-});
-app.use(express.static(__dirname)); // serve o index.html
