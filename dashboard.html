@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard - AutoHub</title>
+</head>
+<body>
+
+<h1 id="welcome"></h1>
+<div id="content"></div>
+
+<script>
+const user = JSON.parse(localStorage.getItem('user'));
+
+if (!user) {
+  window.location.href = '/login';
+}
+
+document.getElementById('welcome').innerText = "Bem-vindo, " + user.nome;
+
+async function loadDashboard() {
+  const res = await fetch('/dashboard');
+  const data = await res.json();
+
+  let html = '';
+
+  data.departamentos.forEach(dep => {
+    html += `<h3>${dep.nome}</h3>`;
+    dep.links.forEach(link => {
+      html += `<a href="${link.url}" target="_blank">${link.nome}</a><br>`;
+    });
+  });
+
+  document.getElementById('content').innerHTML = html;
+}
+
+loadDashboard();
+</script>
+
+</body>
+</html>
