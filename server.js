@@ -5,6 +5,9 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(__dirname)); // serve o index.html
 
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
 // LOGIN MOCK
 const users = [
   { username: "edgar.caetano", password: "1234" }
