@@ -83,3 +83,16 @@ app.get('/dashboard', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
+const path = require('path');
+
+app.get('/', (req, res) => {
+  res.redirect('/login');
+});
+
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'login.html'));
+});
+
+app.get('/dashboard-page', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dashboard.html'));
+});
