@@ -1,39 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Dashboard - AutoHub</title>
+  <title>Login</title>
 </head>
 <body>
 
-<h1 id="welcome"></h1>
-<div id="content"></div>
+<h2>Login</h2>
+<input id="user" placeholder="Usuário">
+<input id="pass" type="password" placeholder="Senha">
+<button onclick="login()">Entrar</button>
 
 <script>
-const user = JSON.parse(localStorage.getItem('user'));
+async function login() {
+  const username = document.getElementById('user').value;
+  const password = document.getElementById('pass').value;
 
-if (!user) {
-  window.location.href = '/login';
-}
-
-document.getElementById('welcome').innerText = "Bem-vindo, " + user.nome;
-
-async function loadDashboard() {
-  const res = await fetch('/dashboard');
-  const data = await res.json();
-
-  let html = '';
-
-  data.departamentos.forEach(dep => {
-    html += `<h3>${dep.nome}</h3>`;
-    dep.links.forEach(link => {
-      html += `<a href="${link.url}" target="_blank">${link.nome}</a><br>`;
-    });
+  const res = await fetch('/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
   });
 
-  document.getElementById('content').innerHTML = html;
+  if (res.ok) {
+    const data = await res.json();
+    localStorage.setItem('user', JSON.stringify(data.user));
+    window.location.href = '/dashboard-page';
+  } else {
+    alert('Login inválido');
+  }
 }
-
-loadDashboard();
 </script>
 
 </body>
