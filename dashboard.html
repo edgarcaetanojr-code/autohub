@@ -6,91 +6,52 @@
 
   <style>
     body {
-      margin: 0;
       font-family: Arial;
-      background: #f4f6f9;
-    }
-
-    .header {
-      background: #1f2937;
-      color: white;
-      padding: 15px;
-    }
-
-    .logout {
-      float: right;
-      cursor: pointer;
-      color: #f87171;
-    }
-
-    .container {
       padding: 20px;
-    }
-
-    .card {
-      background: white;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 8px;
-    }
-
-    a {
-      display: block;
-      color: #2563eb;
-      margin-top: 5px;
     }
   </style>
 </head>
 
 <body>
 
-<div class="header">
-  <span id="welcome"></span>
-  <span class="logout" onclick="logout()">Sair</span>
-</div>
+<h2 id="welcome"></h2>
 
-<div class="container" id="content"></div>
+<div id="content"></div>
 
 <script>
-// 🔐 RECUPERA USUÁRIO
 const user = JSON.parse(localStorage.getItem('user'));
 const username = localStorage.getItem('username');
 
-// 🚨 SE NÃO EXISTIR → VOLTA PRO LOGIN
 if (!user || !username) {
-  alert("Sessão expirada. Faça login novamente.");
+  alert("Sem login");
   window.location.href = '/login';
 }
 
-// 👋 MOSTRA NOME
 document.getElementById('welcome').innerText =
   "Bem-vindo, " + user.nome;
 
-// 🚀 CARREGA DADOS
 async function loadDashboard() {
   try {
     const res = await fetch(`/dashboard?username=${username}`);
-
-    if (!res.ok) {
-      throw new Error("Erro ao carregar dashboard");
-    }
-
     const data = await res.json();
+
+    console.log("RESPOSTA API:", data); // 👈 DEBUG
 
     let html = '';
 
-    if (!data.departamentos || data.departamentos.length === 0) {
-      html = "<p>Nenhum departamento disponível.</p>";
+    if (!data.departamentos) {
+      html = "<p>Erro: departamentos não encontrados</p>";
+    } else if (data.departamentos.length === 0) {
+      html = "<p>Nenhum departamento vinculado</p>";
     } else {
       data.departamentos.forEach(dep => {
-        html += `<div class="card">`;
         html += `<h3>${dep.nome}</h3>`;
 
-        dep.links.forEach(link => {
-          html += `<a href="${link.url}" target="_blank">${link.nome}</a>`;
-        });
-
-        html += `</div>`;
+        if (dep.links) {
+          dep.links.forEach(link => {
+            html += `<p><a href="${link.url}" target="_blank">${link.nome}</a></p>`;
+          });
+        }
       });
     }
 
@@ -98,14 +59,8 @@ async function loadDashboard() {
 
   } catch (err) {
     document.getElementById('content').innerHTML =
-      "<p>Erro ao carregar dados.</p>";
+      "<p>Erro ao carregar</p>";
   }
-}
-
-// 🔓 LOGOUT
-function logout() {
-  localStorage.clear();
-  window.location.href = '/login';
 }
 
 loadDashboard();
